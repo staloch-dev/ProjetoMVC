@@ -3,51 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <title>Lista de Tarefas</title>
 </head>
-<body>
-    <div>
-        <h1>Minhas Tarefas</h1>
-        <h2>Adicionar Nova Tarefa</h2>
-        <form th:action="@{/adicionar}" th:object="${novaTarefa}" method="post">
-            <input type="text" th:field="*{titulo}" placeholder="Título da tarefa" required/>
-            <input type="text" th:field="*{descricao}" placeholder="Descrição da tarefa"/>
-            <button type="submit">Adicionar</button>
-        </form>
-        <hr/>
-        <h2>Tarefas Cadastradas</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Título</th>
-                    <th>Descrição</th>
-                    <th>Status</th>
-                    <th>Data Criação</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:if="${paginaTarefas.empty}">
-                    <td colspan="4" sytle="text-align: center">Nenhuma tarefa cadastrada!</td>
-                </tr>
-                <tr th:each="tarefa : ${paginaTarefas.content}">
-                    <td th:text="${tarefa.titulo}">Título da Tarefa</td>
-                    <td th:text="${tarefa.descricao}">Descrição da Tarefa</td>
-                    <td th:text="${tarefa.concluida} ? 'Concluida' : 'Pendente'">Pendente</td>
-                    <td th:text="${tarefa.dataCriacao}">Data de Criação</td>
-                    <td>
-                        <form th:action="@{/remover/{id}(id=${tarefa.id})}" method="post" style="display:inline;">
-                            <button type="submit">Remover</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <span>
-                Página <span th:text="${paginaTarefas.number + 1}">1</span> de 
-                <span th:text="${paginaTarefas.totalPages}">1</span>
-            </span>
-        </div>
-    </div> 
-</body>
+    <body>
+        <div class="container">
+            <h1>Minhas Tarefas</h1>
+            <h2>Adicionar Nova Tarefa</h2>
+            <form th:action="@{/adicionar}" th:object="${novaTarefa}" method="post">
+                <input type="text" th:field="*{titulo}" placeholder="Título da tarefa" required/>
+                <input type="text" th:field="*{descricao}" placeholder="Descrição da tarefa"/>
+                <button id="btnAdd" type="submit">Adicionar</button>
+            </form>
+            <h2>Tarefas Cadastradas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Descrição</th>
+                        <th>Status</th>
+                        <th>Data Criação</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${paginaTarefas.empty}">
+                        <td colspan="5" style="text-align: center">Nenhuma tarefa cadastrada!</td>
+                    </tr>
+                    <tr th:each="tarefa : ${paginaTarefas.content}">
+                        <td th:text="${tarefa.titulo}">Título</td>
+                        <td th:text="${tarefa.descricao}">Descrição</td>
+                        <td th:text="${tarefa.concluida} ? 'Concluida' : 'Pendente'">Pendente</td>
+                        <td th:text="${#temporals.format(tarefa.dataCriacao, 'dd/MM/yyyy')}">01/01/2025</td>
+                        <td class="actions">
+                            <a th:href="@{/concluir/{id}(id=${tarefa.id})}" class="btn btn-success">
+                                <i class="fa-solid fa-circle-check" aria-hidden="true" title="Concluir"></i>
+                            </a>
+                            <a th:href="@{/editar/{id}(id=${tarefa.id})}" class="btn btn-edit">
+                                <i class="fa-solid fa-pen-to-square" aria-hidden="true" title="Editar"></i>
+                            </a>
+                            <a th:href="@{/excluir/{id}(id=${tarefa.id})}" class="btn btn-danger">
+                                <i class="fa-solid fa-trash-can" aria-hidden="true" title="Excluir"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <span th:if="${!paginaTarefas.first}">
+                    <a th:href="@{/(page=${paginaTarefas.number - 1})}" class="page-btn">
+                        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                    </a>
+                </span>
+                <span th:if="${paginaTarefas.first}">
+                    <span class="page-btn disabled" title="Primeira página" aria-hidden="true">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </span>
+                </span>
+                <span class="page-info">
+                    Página<strong th:text="${paginaTarefas.number + 1}">1</strong>
+                    de<strong th:text="${paginaTarefas.totalPages}">1</strong>
+                </span>
+                <span th:if="${!paginaTarefas.last}">
+                    <a th:href="@{/(page=${paginaTarefas.number + 1})}" class="page-btn" title="Próxima página" aria-label="Próxima página">
+                        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </span>
+                <span th:if="${paginaTarefas.last}">
+                    <span class="page-btn disabled" title="Última página" aria-hidden="true">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </span>
+                </span>
+            </div>
+        </div> 
+    </body>
 </html>
