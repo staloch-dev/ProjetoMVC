@@ -114,6 +114,19 @@ tbody tr:hover {
     color:#ff5555;
 }
 
+.btn-delete{
+    background-color: rgba(237, 53, 16, 0.902);
+    color: #fff;
+    padding: 6px 12px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.btn-delete:hover {
+    background-color: rgba(237, 53, 16, 0.415);
+}
+
 .btn:hover {
     opacity:0.95;
 }
